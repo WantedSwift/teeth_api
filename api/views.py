@@ -23,6 +23,7 @@ def get_user(request):
     try:
         object_user = users.objects.get(token=token)
         ll = model_to_dict(object_user)
+        ll['created_at'] = str(object_user.created_at)
 
         return JsonResponse({
             'status': True,
@@ -51,6 +52,7 @@ def login_register(request):
     try:
         object_user = users.objects.get(email=email)
         ll = model_to_dict(object_user)
+        ll['created_at'] = str(object_user.created_at)
       
 
         return JsonResponse({
@@ -58,10 +60,11 @@ def login_register(request):
             'data': ll
         }, encoder=json.JSONEncoder)
 
-    except Exception as exc:
+    except users.DoesNotExist:
         token =  uuid.uuid4().hex
         object_user = users.objects.create(token=token ,email=email,fb_token=fb_token,id_apple=id_apple)
         ll = model_to_dict(object_user)
+        ll['created_at'] = str(object_user.created_at)
       
         
         return JsonResponse({
@@ -96,9 +99,9 @@ def oauth_return(request):
             user.fb_token = fb_token
             user.save()
 
-            user.created_at = str(user.created_at)
+            #user.created_at = str(user.created_at)
             json_user = model_to_dict(user)
-
+            json_user['created_at'] = str(user.created_at)
 
             return JsonResponse({
                'status': True,
@@ -115,8 +118,9 @@ def oauth_return(request):
                 user.save()
 
           
-            user.created_at = str(user.created_at)
+            #user.created_at = str(user.created_at)
             json_user = model_to_dict(user)
+            json_user['created_at'] = str(user.created_at)
 
            
 
