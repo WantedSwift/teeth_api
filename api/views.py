@@ -6,6 +6,7 @@ import json
 from django.forms.models import model_to_dict
 import uuid
 import requests
+import datetime
 # Create your views here.
 
 
@@ -23,7 +24,8 @@ def get_user(request):
     try:
         object_user = users.objects.get(token=token)
         ll = model_to_dict(object_user)
-        ll['created_at'] = str(object_user.created_at)
+        delta = datetime.date.today() - object_user.created_at.date()
+        ll['limit_day'] = int(7 - delta.days)
 
         return JsonResponse({
             'status': True,
@@ -52,7 +54,8 @@ def login_register(request):
     try:
         object_user = users.objects.get(email=email)
         ll = model_to_dict(object_user)
-        ll['created_at'] = str(object_user.created_at)
+        delta = datetime.date.today() - object_user.created_at.date()
+        ll['limit_day'] = int(7 - delta.days)
       
 
         return JsonResponse({
@@ -64,7 +67,8 @@ def login_register(request):
         token =  uuid.uuid4().hex
         object_user = users.objects.create(token=token ,email=email,fb_token=fb_token,id_apple=id_apple)
         ll = model_to_dict(object_user)
-        ll['created_at'] = str(object_user.created_at)
+        delta = datetime.date.today() - object_user.created_at.date()
+        ll['limit_day'] = int(7 - delta.days)
       
         
         return JsonResponse({
@@ -101,7 +105,8 @@ def oauth_return(request):
 
             #user.created_at = str(user.created_at)
             json_user = model_to_dict(user)
-            json_user['created_at'] = str(user.created_at)
+            delta = datetime.date.today() - user.created_at.date()
+            json_user['limit_day'] = int(7 - delta.days)
 
             return JsonResponse({
                'status': True,
@@ -120,7 +125,8 @@ def oauth_return(request):
           
             #user.created_at = str(user.created_at)
             json_user = model_to_dict(user)
-            json_user['created_at'] = str(user.created_at)
+            delta = datetime.date.today() - user.created_at.date()
+            json_user['limit_day'] = int(7 - delta.days)
 
            
 
